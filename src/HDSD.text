@@ -1,78 +1,54 @@
-## Hướng dẫn sử dụng
-
-### 1. Khởi động các dịch vụ
+1. Khởi động các dịch vụ
 
 Đảm bảo Elasticsearch, Kibana và Winlogbeat đang hoạt động:
 
-```bash
 docker-compose up -d
-```
 
 Kiểm tra Elasticsearch:
 
-```bash
 curl http://localhost:9200
-```
 
 Truy cập Kibana:
 
-```text
 http://localhost:5601
-```
-
----
-
-### 2. Thu thập log Windows
+2. Thu thập log Windows
 
 Khởi động dịch vụ Winlogbeat trên máy Windows:
 
-```powershell
 Start-Service winlogbeat
-```
 
 Kiểm tra dữ liệu đã được gửi lên Elasticsearch:
 
-```bash
 curl http://localhost:9200/winlogbeat-*/_search?pretty
-```
+3. Chạy chương trình giám sát
 
----
-
-### 3. Chạy chương trình giám sát
-
-Script `check.py` sẽ tự động kết nối tới Elasticsearch và quét toàn bộ log Windows được thu thập từ hệ thống.
+Script check.py sẽ tự động kết nối tới Elasticsearch và quét toàn bộ log Windows được thu thập từ hệ thống.
 
 Chạy chương trình:
 
-```bash
 python check.py
-```
 
-Chức năng của `check.py`:
+Chức năng của check.py:
 
-* Truy vấn log từ Elasticsearch.
-* Phân tích các sự kiện bảo mật quan trọng.
-* Phát hiện các dấu hiệu tấn công dựa trên luật (Rule-based).
-* Phát hiện hành vi bất thường bằng mô hình Machine Learning (Isolation Forest).
-* Sinh cảnh báo khi phát hiện sự kiện đáng ngờ.
+Truy vấn log từ Elasticsearch.
+Phân tích các sự kiện bảo mật quan trọng.
+Phát hiện các dấu hiệu tấn công dựa trên luật (Rule-based).
+Phát hiện hành vi bất thường bằng mô hình Machine Learning (Isolation Forest).
+Sinh cảnh báo khi phát hiện sự kiện đáng ngờ.
+4. Gửi cảnh báo
 
----
-
-### 4. Gửi cảnh báo
-
-Khi phát hiện hành vi bất thường hoặc dấu hiệu tấn công, hệ thống sẽ sử dụng module `warning.py` để gửi cảnh báo tới quản trị viên.
+Khi phát hiện hành vi bất thường hoặc dấu hiệu tấn công, hệ thống sẽ sử dụng module warning.py để gửi cảnh báo tới quản trị viên.
 
 Các thông tin cảnh báo bao gồm:
 
-* Loại sự kiện.
-* Thời gian phát hiện.
-* Tài khoản liên quan.
-* Địa chỉ IP nguồn.
-* Mức độ nghiêm trọng của cảnh báo.
+Loại sự kiện.
+Thời gian phát hiện.
+Tài khoản liên quan.
+Địa chỉ IP nguồn.
+Mức độ nghiêm trọng của cảnh báo.
 
 Ví dụ:
 
-```text
 [WARNING]
 Phát hiện 15 lần đăng nhập thất bại liên tiếp
 
@@ -80,22 +56,15 @@ User: Administrator
 Source IP: 192.168.238.128
 Event ID: 4625
 Time: 2025-08-15 10:25:31
-```
-
----
-
-### 5. Giám sát trên Kibana
+5. Giám sát trên Kibana
 
 Sau khi log được thu thập và xử lý, quản trị viên có thể theo dõi:
 
-* Thống kê đăng nhập thành công/thất bại.
-* Danh sách IP có nhiều cảnh báo nhất.
-* Biểu đồ xu hướng tấn công theo thời gian.
-* Các hành vi bất thường được mô hình học máy phát hiện.
+Thống kê đăng nhập thành công/thất bại.
+Danh sách IP có nhiều cảnh báo nhất.
+Biểu đồ xu hướng tấn công theo thời gian.
+Các hành vi bất thường được mô hình học máy phát hiện.
 
 Thông qua Dashboard trên Kibana:
 
-```text
 http://localhost:5601
-```
-
